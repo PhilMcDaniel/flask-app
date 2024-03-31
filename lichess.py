@@ -29,3 +29,6 @@ def get_lichess_rating_history(username,rating_type):
     #bullet_df.head(10)
 
     return df
+
+#df = get_lichess_rating_history('pcmcd','Puzzles')
+#df.head(10)
