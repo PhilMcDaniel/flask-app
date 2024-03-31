@@ -1,39 +1,40 @@
+import plotly.graph_objs as go
 from flask import Flask, render_template, request
-import random
+import lichess
 
-app = Flask(__name__, template_folder="templates")
+app = Flask(__name__)
 
-# Sample quotes database (you can replace this with your own database or API)
-quotes = {
-    'motivational': [
-        "The only way to do great work is to love what you do. - Steve Jobs",
-        "Believe you can and you're halfway there. - Theodore Roosevelt",
-        "Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill"
-    ],
-    'funny': [
-        "I'm not lazy, I'm on energy-saving mode.",
-        "I told my wife she was drawing her eyebrows too high. She looked surprised.",
-        "I told my computer I needed a break, and now it won't stop sending me vacation ads."
-    ],
-    'inspirational': [
-        "The best way to predict the future is to invent it. - Alan Kay",
-        "The only limit to our realization of tomorrow will be our doubts of today. - Franklin D. Roosevelt",
-        "In the middle of difficulty lies opportunity. - Albert Einstein"
-    ]
-}
 
-@app.route('/')
+# Route for the homepage
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    username = request.form.get('username', 'pcmcd') #default to me
+    format_choice = request.form.get('format', 'Puzzles')  # Default to 'Puzzle'
+    bullet_df = lichess.get_lichess_rating_history(username,format_choice)
+    # Create the trace for the line plot
+    trace = go.Scatter(
+        x=bullet_df['date'],
+        y=bullet_df['rating'],
+        mode='lines',
+        name='Rating'
+    )
 
-@app.route('/quote', methods=['POST'])
-def generate_quote():
-    category = request.form['category']
-    if category in quotes:
-        quote = random.choice(quotes[category])
-        return render_template('quote.html', quote=quote)
-    else:
-        return "Invalid category"
+    # Create the layout
+    layout = go.Layout(
+        title=f'Rating by Date for User: {username}, Format: {format_choice}',
+        xaxis=dict(title='Date'),
+        yaxis=dict(title='Rating')
+    )
+
+    # Create the plot data
+    plot_data = [trace]
+    fig = go.Figure(data=plot_data, layout=layout)
+
+    # Convert the figure to an HTML string
+    plot_div = fig.to_html(full_html=False)
+
+    # Render the HTML template and pass the visualization data
+    return render_template('index.html', plot=plot_div, username=username, format_choice=format_choice)
 
 if __name__ == '__main__':
     app.run(debug=True)
