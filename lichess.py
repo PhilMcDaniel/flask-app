@@ -32,3 +32,19 @@ def get_lichess_rating_history(username,rating_type):
 
 #df = get_lichess_rating_history('pcmcd','Puzzles')
 #df.head(10)
+
+
+def get_lichess_user_performance_summary(username):
+    data_list = []
+    url = f'https://lichess.org/api/user/{username}'
+    response = requests.get(url)
+    data = response.json()
+    
+    #remove some that don't have same columns
+    del data['perfs']["streak"]
+    del data['perfs']["racer"]
+
+    return data.get("perfs")
+
+
+data = get_lichess_user_performance_summary("pcmcd")

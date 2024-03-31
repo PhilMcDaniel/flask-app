@@ -7,6 +7,7 @@
 </head>
 <body>
     <h1>Lichess User Rating History</h1>
+    <a href="{{ url_for('user_summary_table') }}"><button>View Player Performance Summary</button></a>
     <form id="filter-form" method="post">
         <label for="username">Enter Username:</label>
         <input type="text" name="username" id="username" value="{{ username }}" onchange="submitForm(this.form)">
@@ -20,6 +21,7 @@
             <option value="Puzzles" {% if format_choice == 'Puzzles' %} selected {% endif %}>Puzzle</option>
         </select>
     </form>
+    
     <!-- Plotly chart will be drawn inside this div -->
     {{ plot | safe }}
 

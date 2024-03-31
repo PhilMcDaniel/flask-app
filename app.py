@@ -34,7 +34,11 @@ def index():
     layout = go.Layout(
         title=f'Rating by Date for User: {username}, Format: {format_choice}',
         xaxis=dict(title='Date'),
-        yaxis=dict(title='Rating')
+        yaxis=dict(title='Rating'),
+        autosize=True,
+        #width=2000,
+        height=500,
+        paper_bgcolor="LightSteelBlue",
     )
 
     # Create the plot data
@@ -65,6 +69,13 @@ def index():
 
     # Render the HTML template and pass the visualization data
     return render_template('index.html', plot=plot_div, username=username, format_choice=format_choice)
+
+
+@app.route("/user_summary_table")
+def user_summary_table():
+    data = lichess.get_lichess_user_performance_summary("pcmcd")
+    return render_template("user_summary_table.html", data=data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
