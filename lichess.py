@@ -45,6 +45,3 @@ def get_lichess_user_performance_summary(username):
     del data['perfs']["racer"]
 
     return data.get("perfs")
-
-
-data = get_lichess_user_performance_summary("pcmcd")
