@@ -45,3 +45,32 @@ def get_lichess_user_performance_summary(username):
     del data['perfs']["racer"]
 
     return data.get("perfs")
+
+
+def get_lichess_user_game_history(username,number_of_games):
+
+    url = f'https://lichess.org/api/games/user/{username}'
+    headers = {'Accept':'application/x-ndjson'}
+    params = {
+        "max":{number_of_games},
+        "sort":"dateDesc",
+        "opening":True,
+        "moves":False
+              }
+    resp = requests.get(url=url,headers=headers,params=params)
+    
+    #split the ndjson games
+    lines = resp.text.strip().split("\n")
+    # Convert each line to a dictionary and collect them in a list
+    games = []
+    for line in lines:
+        games.append(json.loads(line))
+    
+    return games
+
+games = get_lichess_user_game_history("pcmcd",2)
+
+
+# func for wins/losses by opening
+
+# visualize it
