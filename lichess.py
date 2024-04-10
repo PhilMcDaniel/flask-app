@@ -68,12 +68,11 @@ def get_lichess_user_game_history(username,number_of_games):
     
     return games
 
-games = get_lichess_user_game_history("pcmcd",5)
-
 def enhance_game_data(games,user):
     games_list = []
-    game_dict = {}
+
     for game in games:
+        game_dict = {}
         game_id = game.get("id")
         rated = game.get("rated")
         match_type = game.get("variant")
@@ -120,6 +119,7 @@ def enhance_game_data(games,user):
         game_dict["total_game_duration"] = total_game_duration
         game_dict["user_result"] = user_result
         game_dict["user_color"] = user_color
+        
         games_list.append(game_dict)
     
     return games_list
