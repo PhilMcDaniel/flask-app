@@ -68,8 +68,44 @@ def get_lichess_user_game_history(username,number_of_games):
     
     return games
 
-games = get_lichess_user_game_history("pcmcd",2)
+games = get_lichess_user_game_history("pcmcd",5)
 
+def add_game_result(games,user):
+    games_list = []
+    for game in games:
+        white = game.get("players").get("white").get("user").get("name")
+        black = game.get("players").get("black").get("user").get("name")
+        winner = game.get("winner")
+        
+        user_color = ""
+        if user == white:
+            user_color = "white"
+        else: 
+            user_color = "black"
+        
+        user_result = ""
+        if winner is None:
+            user_result = "draw"
+        elif user_color == winner:
+            user_result = "win"
+        else:
+            user_result = "loss"
+        
+        game["user_result"] = user_result
+        game["user_color"] = user_color
+        games_list.append(game)
+    
+    return games_list
+    
+def create_df_from_data(data):
+    df = pd.DataFrame(data)
+    return df
+
+user = "pcmcd"
+games = get_lichess_user_game_history(user,10)
+games_enhanced = add_game_result(games,user)
+df = create_df_from_data(games_enhanced)
+df.head(10)
 
 # func for wins/losses by opening
 
