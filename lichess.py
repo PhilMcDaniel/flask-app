@@ -127,14 +127,3 @@ def enhance_game_data(games,user):
 def create_df_from_data(data):
     df = pd.DataFrame(data)
     return df
-
-user = "pcmcd"
-number_of_games = 5
-games = get_lichess_user_game_history(user,number_of_games)
-games_enhanced = enhance_game_data(games,user)
-df = create_df_from_data(games_enhanced)
-df.head(50)
-
-# func for wins/losses by opening
-
-# visualize it

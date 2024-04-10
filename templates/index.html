@@ -8,6 +8,7 @@
 <body>
     <h1>Lichess User Rating History</h1>
     <a href="{{ url_for('user_summary_table') }}"><button>View Player Performance Summary</button></a>
+    <a href="{{ url_for('display_dataframe') }}"><button>View DataFrame</button>
     <form id="filter-form" method="post">
         <label for="username">Enter Username:</label>
         <input type="text" name="username" id="username" value="{{ username }}" onchange="submitForm(this.form)">

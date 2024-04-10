@@ -76,6 +76,15 @@ def user_summary_table():
     data = lichess.get_lichess_user_performance_summary("pcmcd")
     return render_template("user_summary_table.html", data=data)
 
+@app.route('/dataframe')
+def display_dataframe():
+    user = "pcmcd"
+    number_of_games = 10
+    games = lichess.get_lichess_user_game_history(user,number_of_games)
+    games_enhanced = lichess.enhance_game_data(games,user)
+    df = lichess.create_df_from_data(games_enhanced)
+    return render_template('dataframe.html', table=df.to_html())
+
 
 if __name__ == '__main__':
     app.run(debug=True)
