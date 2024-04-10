@@ -70,20 +70,32 @@ def get_lichess_user_game_history(username,number_of_games):
 
 games = get_lichess_user_game_history("pcmcd",5)
 
-def add_game_result(games,user):
+def enhance_game_data(games,user):
     games_list = []
+    game_dict = {}
     for game in games:
+        game_id = game.get("id")
+        rated = game.get("rated")
+        match_type = game.get("variant")
+        match_speed = game.get("speed")
+        status = game.get("status")
+    
+        start_date = datetime.fromtimestamp(game.get("createdAt")/1000)
         white = game.get("players").get("white").get("user").get("name")
+        white_rating = game.get("players").get("white").get("rating")
         black = game.get("players").get("black").get("user").get("name")
+        black_rating = game.get("players").get("black").get("rating")
         winner = game.get("winner")
+        opening = game.get("opening").get("name")
+        start_clock_time = game.get("clock").get("initial")
+        clock_increment = game.get("clock").get("increment")
+        total_game_duration = game.get("clock").get("totalTime")
         
-        user_color = ""
         if user == white:
             user_color = "white"
         else: 
             user_color = "black"
         
-        user_result = ""
         if winner is None:
             user_result = "draw"
         elif user_color == winner:
@@ -91,9 +103,24 @@ def add_game_result(games,user):
         else:
             user_result = "loss"
         
-        game["user_result"] = user_result
-        game["user_color"] = user_color
-        games_list.append(game)
+        game_dict["game_id"] = game_id
+        game_dict["rated"] = rated
+        game_dict["match_type"] = match_type
+        game_dict["match_speed"] = match_speed
+        game_dict["status"] = status
+        game_dict["start_date"] = start_date
+        game_dict["white"] = white
+        game_dict["white_rating"] = white_rating
+        game_dict["black"] = black
+        game_dict["black_rating"] = black_rating
+        game_dict["winner"] = winner
+        game_dict["opening"] = opening
+        game_dict["start_clock_time"] = start_clock_time
+        game_dict["clock_increment"] = clock_increment
+        game_dict["total_game_duration"] = total_game_duration
+        game_dict["user_result"] = user_result
+        game_dict["user_color"] = user_color
+        games_list.append(game_dict)
     
     return games_list
     
@@ -102,10 +129,11 @@ def create_df_from_data(data):
     return df
 
 user = "pcmcd"
-games = get_lichess_user_game_history(user,10)
-games_enhanced = add_game_result(games,user)
+number_of_games = 5
+games = get_lichess_user_game_history(user,number_of_games)
+games_enhanced = enhance_game_data(games,user)
 df = create_df_from_data(games_enhanced)
-df.head(10)
+df.head(50)
 
 # func for wins/losses by opening
 
