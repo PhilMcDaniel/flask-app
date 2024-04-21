@@ -11,19 +11,26 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/user_summary")
-def user_summary_table():
-    data = lichess.get_lichess_user_performance_summary("pcmcd")
-    return render_template("user_summary_table.html", data=data)
+@app.route("/user_summary", methods = ['GET','POST'])
+def user_summary():
+    if request.method == 'POST':
+        username = request.form['username']
+        data = lichess.get_lichess_user_performance_summary(username)
+        return render_template("user_summary.html", data=data,username = username)
+    else:
+        return render_template("user_summary.html")
 
-@app.route('/game_history')
-def display_dataframe():
-    user = "pcmcd"
-    number_of_games = 10
-    games = lichess.get_lichess_user_game_history(user,number_of_games)
-    games_enhanced = lichess.enhance_game_data(games,user)
-    df = lichess.create_df_from_data(games_enhanced)
-    return render_template('game_history.html', table=df.to_html())
+@app.route('/game_history', methods = ['GET','POST'])
+def game_history():
+    if request.method == 'POST':
+        username = request.form['username']
+        num_games = int(request.form['num_games'])
+        games = lichess.get_lichess_user_game_history(username,num_games)
+        games_enhanced = lichess.enhance_game_data(games,username)
+        df = lichess.create_df_from_data(games_enhanced)
+        return render_template('game_history.html', table=df.to_html(),username=username,num_games=num_games)
+    else:
+        return render_template('game_history.html')
 
 
 @app.route('/data_viz', methods=['GET', 'POST'])
@@ -32,7 +39,7 @@ def data_viz():
         username = request.form['username']
         format_choice = request.form['format_choice']
         plot_div = lichess.plotly_chart(username, format_choice)
-        return render_template('data_viz.html', plot_div=plot_div)
+        return render_template('data_viz.html', plot_div=plot_div,username = username,format_choice = format_choice)
     else:
         return render_template('data_viz.html')
 

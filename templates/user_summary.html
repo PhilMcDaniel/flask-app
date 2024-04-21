@@ -22,8 +22,16 @@
     </style>
 </head>
 <body>
-    <a href="{{ url_for('index') }}" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Back</a>
     <h1>User Performance Summary</h1>
+    <a href="{{ url_for('index') }}" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Back</a>
+    <br><br>
+    <form method="POST" action="{{ url_for('user_summary') }}">
+        <label for="username">Enter a username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <button type="submit">Generate Data</button>
+    </form>
+    <h2>Performance Summary Table For User: {{username}}</h2>
+    {% if data %}
     <table>
         <thead>
             <tr>
@@ -46,5 +54,6 @@
             {% endfor %}
         </tbody>
     </table>
+    {% endif %}
 </body>
 </html>
