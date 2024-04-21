@@ -31,7 +31,7 @@
     </form>
     <h2>Showing Latest {{num_games}} Games for User: {{username}}</h2>
     {% if table %}
-        <p>{{points}} points scored out of {{available_points}} available, {{points - (available_points/2)}} score</p>
+        <p>{{points}} points scored out of {{available_points}} available</p>
         {{ table|safe }}
     {% endif %}
 </body>
