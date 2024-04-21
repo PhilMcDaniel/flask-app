@@ -35,6 +35,34 @@ def game_history():
         return render_template('game_history.html', table=df.to_html(),username=username,num_games=num_games,points=points,available_points=available_points)
     else:
         return render_template('game_history.html')
+    
+@app.route('/results_by_color', methods = ['GET','POST'])
+def results_by_color():
+    if request.method == 'POST':
+        #get user input
+        username = request.form['username']
+        num_games = int(request.form['num_games'])
+        #get game summary
+        df = lichess.results_by_color(username,num_games)
+        #get overall score
+        points,available_points = lichess.player_overall_score(username,num_games)
+        return render_template('results_by_color.html', table=df.to_html(),username=username,num_games=num_games,points=points,available_points=available_points)
+    else:
+        return render_template('results_by_color.html')
+    
+@app.route('/results_by_opening', methods = ['GET','POST'])
+def results_by_opening():
+    if request.method == 'POST':
+        #get user input
+        username = request.form['username']
+        num_games = int(request.form['num_games'])
+        #get game summary
+        df = lichess.results_by_opening(username,num_games)
+        #get overall score
+        points,available_points = lichess.player_overall_score(username,num_games)
+        return render_template('results_by_opening.html', table=df.to_html(),username=username,num_games=num_games,points=points,available_points=available_points)
+    else:
+        return render_template('results_by_opening.html')
 
 @app.route('/data_viz', methods=['GET', 'POST'])
 def data_viz():
