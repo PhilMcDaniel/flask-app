@@ -32,7 +32,6 @@ def game_history():
     else:
         return render_template('game_history.html')
 
-
 @app.route('/data_viz', methods=['GET', 'POST'])
 def data_viz():
     if request.method == 'POST':
