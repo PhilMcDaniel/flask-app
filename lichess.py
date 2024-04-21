@@ -91,7 +91,7 @@ def enhance_game_data(games,user):
         clock_increment = game.get("clock").get("increment")
         total_game_duration = game.get("clock").get("totalTime")
         
-        if user == white:
+        if user.lower().strip() == white.lower().strip():
             user_color = "white"
         else: 
             user_color = "black"
