@@ -102,6 +102,15 @@ def enhance_game_data(games,user):
             user_result = "win"
         else:
             user_result = "loss"
+
+        if user_result == "draw":
+            user_score = .5
+        elif user_result == "win":
+            user_score = 1
+        elif user_result == "loss":
+            user_score = 0
+        else:
+            user_score = None
         
         game_dict["game_id"] = game_id
         game_dict["rated"] = rated
@@ -120,6 +129,7 @@ def enhance_game_data(games,user):
         game_dict["total_game_duration"] = total_game_duration
         game_dict["user_result"] = user_result
         game_dict["user_color"] = user_color
+        game_dict["user_score"] = user_score
         
         games_list.append(game_dict)
     
@@ -129,6 +139,35 @@ def create_df_from_data(data):
     df = pd.DataFrame(data)
     return df
 
+def results_by_color(username="pcmcd",games=10):
+    data = get_lichess_user_game_history(username,games)
+    data = enhance_game_data(data,username)
+    df= create_df_from_data(data)
+
+    result_by_color_df = df[["user_color","user_result","user_score"]].groupby(["user_color","user_result"]).count().reset_index()
+    result_by_color_df = result_by_color_df.rename(columns={"user_score":"result_count"})
+    result_by_color_df = result_by_color_df.sort_values(by=['user_color', 'user_result'], ascending=[True, True])
+
+    return result_by_color_df
+
+def results_by_opening(username="pcmcd",games=10):
+    data = get_lichess_user_game_history(username,games)
+    data = enhance_game_data(data,username)
+    df= create_df_from_data(data)
+
+    result_by_opening_df = df[["opening","user_result","user_score"]].groupby(["opening","user_result"]).count().reset_index()
+    result_by_opening_df = result_by_opening_df.rename(columns={"user_score":"result_count"})
+    result_by_opening_df = result_by_opening_df.sort_values(by=['result_count'], ascending=[False])
+
+    return result_by_opening_df
+
+def player_overall_score(username="pcmcd",games=10):
+    data = get_lichess_user_game_history(username,games)
+    data = enhance_game_data(data,username)
+    df = create_df_from_data(data)
+    score_df = df["user_score"].sum()
+    
+    return (score_df,games)
 
 def plotly_chart(username='pcmcd', format_choice='Blitz'):
     #getting data from Lichess API
@@ -185,4 +224,3 @@ def plotly_chart(username='pcmcd', format_choice='Blitz'):
     # Convert the figure to an HTML string
     plot_div = fig.to_html(full_html=False)
     return plot_div
-
