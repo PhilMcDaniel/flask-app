@@ -1,36 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Lichess User Rating History</title>
-    <!-- Plotly.js -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Flask App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background-color: #007bff;
+      color: #fff;
+      padding: 12px 20px;
+      text-decoration: none;
+      border-radius: 4px;
+      margin: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-    <h1>Lichess User Rating History</h1>
-    <a href="{{ url_for('user_summary_table') }}"><button>View Player Performance Summary</button></a><br/>
-    <a href="{{ url_for('display_dataframe') }}"><button>View DataFrame</button>
-    <form id="filter-form" method="post">
-        <label for="username">Enter Username:</label>
-        <input type="text" name="username" id="username" value="{{ username }}" onchange="submitForm(this.form)">
-        <br>
-        <label for="format">Select Format:</label>
-        <select name="format" id="format" onchange="submitForm(this.form)">
-            <option value="Bullet" {% if format_choice == 'Bullet' %} selected {% endif %}>Bullet</option>
-            <option value="Blitz" {% if format_choice == 'Blitz' %} selected {% endif %}>Blitz</option>
-            <option value="Rapid" {% if format_choice == 'Rapid' %} selected {% endif %}>Rapid</option>
-            <option value="Classical" {% if format_choice == 'Classical' %} selected {% endif %}>Classical</option>
-            <option value="Puzzles" {% if format_choice == 'Puzzles' %} selected {% endif %}>Puzzle</option>
-        </select>
-    </form>
-    
-    <!-- Plotly chart will be drawn inside this div -->
-    {{ plot | safe }}
-
-    <script>
-        function submitForm(form) {
-            form.method = 'post'; // Set the form method to POST
-            form.submit();
-        }
-    </script>
+  <div class="container">
+    <h1>Welcome to My Flask App</h1>
+    <div class="btn-container">
+      <a href="/data_viz" class="btn">Data Visualization</a>
+      <a href="/user_summary" class="btn">User Summary</a>
+      <a href="/game_history" class="btn">Game History</a>
+    </div>
+  </div>
 </body>
 </html>

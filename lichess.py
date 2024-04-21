@@ -2,9 +2,10 @@ import json
 import requests
 import pandas as pd
 from datetime import datetime
+import plotly.graph_objs as go
 
 # Replace 'username' with the desired Lichess username
-def get_lichess_rating_history(username,rating_type):
+def get_lichess_rating_history(username='pcmcd',rating_type='Blitz'):
 
     # Fetch the user's rating history from the Lichess API
     url = f'https://lichess.org/api/user/{username}/rating-history'
@@ -34,7 +35,7 @@ def get_lichess_rating_history(username,rating_type):
 #df.head(10)
 
 
-def get_lichess_user_performance_summary(username):
+def get_lichess_user_performance_summary(username='pcmcd'):
     data_list = []
     url = f'https://lichess.org/api/user/{username}'
     response = requests.get(url)
@@ -47,7 +48,7 @@ def get_lichess_user_performance_summary(username):
     return data.get("perfs")
 
 
-def get_lichess_user_game_history(username,number_of_games):
+def get_lichess_user_game_history(username='pcmcd',number_of_games='10'):
 
     url = f'https://lichess.org/api/games/user/{username}'
     headers = {'Accept':'application/x-ndjson'}
@@ -127,3 +128,63 @@ def enhance_game_data(games,user):
 def create_df_from_data(data):
     df = pd.DataFrame(data)
     return df
+
+
+def plotly_chart():
+    username = 'pcmcd'
+    format_choice = 'Blitz'
+    #getting data from Lichess API
+    df = get_lichess_rating_history(username,format_choice)
+    #calculate min and max for annotations
+    min_rating = df['rating'].min()
+    max_rating = df['rating'].max()
+
+    # Get the dates associated with the minimum and maximum rating values
+    date_min_rating = df['date'].loc[df['rating'].idxmin()].date()
+    date_max_rating = df['date'].loc[df['rating'].idxmax()].date()
+
+    # Create the trace for the line plot
+    trace = go.Scatter(
+        x=df['date'],
+        y=df['rating'],
+        mode='lines',
+        name='Rating'
+    )
+
+    # Create the layout
+    layout = go.Layout(
+        title=f'Rating by Date for User: {username}, Format: {format_choice}',
+        xaxis=dict(title='Date'),
+        yaxis=dict(title='Rating'),
+        autosize=True,
+        #width=2000,
+        height=500,
+        paper_bgcolor="LightSteelBlue",
+    )
+
+    # Create the plot data
+    plot_data = [trace]
+    fig = go.Figure(data=plot_data, layout=layout)
+
+    # Add annotations
+    fig.add_annotation(
+        x=date_min_rating,
+        y=min_rating,
+        text=f"Low of {min_rating} on {date_min_rating}",
+        showarrow=False,
+        xanchor="auto",
+        yshift=-10,
+    )
+    fig.add_annotation(
+        x=date_max_rating,
+        y=max_rating,
+        text=f"High of {max_rating} on {date_max_rating}",
+        showarrow=False,
+        xanchor="auto",
+        yshift=10,
+    )
+
+    # Convert the figure to an HTML string
+    plot_div = fig.to_html(full_html=False)
+    return plot_div
+
