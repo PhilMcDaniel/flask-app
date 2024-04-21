@@ -23,13 +23,18 @@ def display_dataframe():
     games = lichess.get_lichess_user_game_history(user,number_of_games)
     games_enhanced = lichess.enhance_game_data(games,user)
     df = lichess.create_df_from_data(games_enhanced)
-    return render_template('dataframe.html', table=df.to_html())
+    return render_template('game_history.html', table=df.to_html())
 
 
-@app.route('/data_viz')
+@app.route('/data_viz', methods=['GET', 'POST'])
 def data_viz():
-    plot_div = lichess.plotly_chart()
-    return render_template('data_viz.html', plot_div=plot_div)
+    if request.method == 'POST':
+        username = request.form['username']
+        format_choice = request.form['format_choice']
+        plot_div = lichess.plotly_chart(username, format_choice)
+        return render_template('data_viz.html', plot_div=plot_div)
+    else:
+        return render_template('data_viz.html')
 
 
 if __name__ == '__main__':

@@ -130,9 +130,7 @@ def create_df_from_data(data):
     return df
 
 
-def plotly_chart():
-    username = 'pcmcd'
-    format_choice = 'Blitz'
+def plotly_chart(username='pcmcd', format_choice='Blitz'):
     #getting data from Lichess API
     df = get_lichess_rating_history(username,format_choice)
     #calculate min and max for annotations

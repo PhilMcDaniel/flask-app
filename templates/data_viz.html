@@ -6,7 +6,21 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-  <a href="{{ url_for('index') }}" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Back</a>
-    {{ plot_div|safe }}
+  <a href="{{ url_for('index') }}" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Back</a><br><br>
+  <form method="POST" action="{{ url_for('data_viz') }}">
+    <label for="username">Enter a username:</label>
+    <input type="text" id="username" name="username" required>
+    <br>
+    <label for="format_choice">Select a format:</label>
+    <select id="format_choice" name="format_choice">
+        <option value="Puzzles">Puzzle</option>
+        <option value="Blitz">Blitz</option>
+        <option value="Bullet">Bullet</option>
+        <option value="Rapid">Rapid</option>
+        <option value="Classical">Classical</option>
+    </select>
+    <button type="submit">Generate Chart</button>
+</form>
+  {{ plot_div|safe }}
 </body>
 </html>
