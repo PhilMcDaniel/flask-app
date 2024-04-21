@@ -32,7 +32,7 @@ def game_history():
         df = lichess.create_df_from_data(games_enhanced)
         #get overall score
         points,available_points = lichess.player_overall_score(username,num_games)
-        return render_template('game_history.html', table=df.to_html(),username=username,num_games=num_games,points=points,available_points=available_points)
+        return render_template('game_history.html', table=df.to_html(index=False),username=username,num_games=num_games,points=points,available_points=available_points)
     else:
         return render_template('game_history.html')
     
@@ -46,7 +46,7 @@ def results_by_color():
         df = lichess.results_by_color(username,num_games)
         #get overall score
         points,available_points = lichess.player_overall_score(username,num_games)
-        return render_template('results_by_color.html', table=df.to_html(),username=username,num_games=num_games,points=points,available_points=available_points)
+        return render_template('results_by_color.html', table=df.to_html(index=False),username=username,num_games=num_games,points=points,available_points=available_points)
     else:
         return render_template('results_by_color.html')
     
@@ -60,7 +60,7 @@ def results_by_opening():
         df = lichess.results_by_opening(username,num_games)
         #get overall score
         points,available_points = lichess.player_overall_score(username,num_games)
-        return render_template('results_by_opening.html', table=df.to_html(),username=username,num_games=num_games,points=points,available_points=available_points)
+        return render_template('results_by_opening.html', table=df.to_html(index=False),username=username,num_games=num_games,points=points,available_points=available_points)
     else:
         return render_template('results_by_opening.html')
 
