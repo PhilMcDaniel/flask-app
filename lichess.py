@@ -144,20 +144,19 @@ def results_by_color(username="pcmcd",games=10):
     data = enhance_game_data(data,username)
     df= create_df_from_data(data)
 
-    result_by_color_df = df[["user_color","user_result","user_score"]].groupby(["user_color","user_result"]).count().reset_index()
-    result_by_color_df = result_by_color_df.rename(columns={"user_score":"result_count"})
-    result_by_color_df = result_by_color_df.sort_values(by=['user_color', 'user_result'], ascending=[True, True])
+    result_by_color_df = df.groupby('user_color').agg({'user_score': 'sum','game_id':'count'}).reset_index()
+    result_by_color_df.columns = ['color', 'score', 'games']
+    result_by_color_df = result_by_color_df.sort_values(by=['games','score','color'], ascending=[False,False,True])
 
     return result_by_color_df
 
 def results_by_opening(username="pcmcd",games=10):
     data = get_lichess_user_game_history(username,games)
     data = enhance_game_data(data,username)
-    df= create_df_from_data(data)
-
-    result_by_opening_df = df[["opening","user_result","user_score"]].groupby(["opening","user_result"]).count().reset_index()
-    result_by_opening_df = result_by_opening_df.rename(columns={"user_score":"result_count"})
-    result_by_opening_df = result_by_opening_df.sort_values(by=['result_count'], ascending=[False])
+    df = create_df_from_data(data)
+    result_by_opening_df = df.groupby('opening').agg({'user_score': 'sum','game_id':'count'}).reset_index()
+    result_by_opening_df.columns = ['opening', 'score', 'games']
+    result_by_opening_df = result_by_opening_df.sort_values(by=['games','score','opening'], ascending=[False,False,True])
 
     return result_by_opening_df
 
