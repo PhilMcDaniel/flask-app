@@ -29,8 +29,9 @@
         <input type="number" id="num_games" name="num_games" required><br>
         <button type="submit">Generate Data</button>
     </form>
-    <h2>Showing Latest {{num_games}} games for user: {{username}}</h2>
+    <h2>Showing Latest {{num_games}} Games for User: {{username}}</h2>
     {% if table %}
+        <p>{{points}} points scored out of {{available_points}} available, {{points - (available_points/2)}} score</p>
         {{ table|safe }}
     {% endif %}
 </body>

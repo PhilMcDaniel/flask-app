@@ -23,12 +23,16 @@ def user_summary():
 @app.route('/game_history', methods = ['GET','POST'])
 def game_history():
     if request.method == 'POST':
+        #get user input
         username = request.form['username']
         num_games = int(request.form['num_games'])
+        #get game history
         games = lichess.get_lichess_user_game_history(username,num_games)
         games_enhanced = lichess.enhance_game_data(games,username)
         df = lichess.create_df_from_data(games_enhanced)
-        return render_template('game_history.html', table=df.to_html(),username=username,num_games=num_games)
+        #get overall score
+        points,available_points = lichess.player_overall_score(username,num_games)
+        return render_template('game_history.html', table=df.to_html(),username=username,num_games=num_games,points=points,available_points=available_points)
     else:
         return render_template('game_history.html')
 
