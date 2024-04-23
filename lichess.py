@@ -7,6 +7,7 @@ import plotly.graph_objs as go
 # Replace 'username' with the desired Lichess username
 def get_lichess_rating_history(username='pcmcd',rating_type='Blitz'):
 
+    username = username.strip()
     # Fetch the user's rating history from the Lichess API
     url = f'https://lichess.org/api/user/{username}/rating-history'
     response = requests.get(url)
@@ -37,6 +38,7 @@ def get_lichess_rating_history(username='pcmcd',rating_type='Blitz'):
 
 def get_lichess_user_performance_summary(username='pcmcd'):
     data_list = []
+    username = username.strip()
     url = f'https://lichess.org/api/user/{username}'
     response = requests.get(url)
     data = response.json()
@@ -49,7 +51,7 @@ def get_lichess_user_performance_summary(username='pcmcd'):
 
 
 def get_lichess_user_game_history(username='pcmcd',number_of_games='10'):
-
+    username = username.strip()
     url = f'https://lichess.org/api/games/user/{username}'
     headers = {'Accept':'application/x-ndjson'}
     params = {
@@ -140,6 +142,7 @@ def create_df_from_data(data):
     return df
 
 def results_by_color(username="pcmcd",games=10):
+    username = username.strip()
     data = get_lichess_user_game_history(username,games)
     data = enhance_game_data(data,username)
     df= create_df_from_data(data)
@@ -151,6 +154,7 @@ def results_by_color(username="pcmcd",games=10):
     return result_by_color_df
 
 def results_by_opening(username="pcmcd",games=10):
+    username = username.strip()
     data = get_lichess_user_game_history(username,games)
     data = enhance_game_data(data,username)
     df = create_df_from_data(data)
@@ -161,6 +165,7 @@ def results_by_opening(username="pcmcd",games=10):
     return result_by_opening_df
 
 def player_overall_score(username="pcmcd",games=10):
+    username = username.strip()
     data = get_lichess_user_game_history(username,games)
     data = enhance_game_data(data,username)
     df = create_df_from_data(data)
@@ -169,6 +174,7 @@ def player_overall_score(username="pcmcd",games=10):
     return (score_df,games)
 
 def plotly_chart(username='pcmcd', format_choice='Blitz'):
+    username = username.strip()
     #getting data from Lichess API
     df = get_lichess_rating_history(username,format_choice)
     #calculate min and max for annotations
