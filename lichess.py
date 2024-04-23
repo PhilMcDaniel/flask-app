@@ -51,7 +51,6 @@ def get_lichess_user_performance_summary(username='pcmcd'):
 
 
 def get_lichess_user_game_history(username='pcmcd',number_of_games='10'):
-    username = username.strip()
     url = f'https://lichess.org/api/games/user/{username}'
     headers = {'Accept':'application/x-ndjson'}
     params = {
@@ -113,6 +112,9 @@ def enhance_game_data(games,user):
             user_score = 0
         else:
             user_score = None
+
+        #opening formatted with a semi colon to give more detail. Parent better for rollups
+        parent_opening = opening.split(":")[0]
         
         game_dict["game_id"] = game_id
         game_dict["rated"] = rated
@@ -126,6 +128,7 @@ def enhance_game_data(games,user):
         game_dict["black_rating"] = black_rating
         game_dict["winner"] = winner
         game_dict["opening"] = opening
+        game_dict["parent_opening"] = parent_opening
         game_dict["start_clock_time"] = start_clock_time
         game_dict["clock_increment"] = clock_increment
         game_dict["total_game_duration"] = total_game_duration
@@ -142,7 +145,6 @@ def create_df_from_data(data):
     return df
 
 def results_by_color(username="pcmcd",games=10):
-    username = username.strip()
     data = get_lichess_user_game_history(username,games)
     data = enhance_game_data(data,username)
     df= create_df_from_data(data)
@@ -154,18 +156,16 @@ def results_by_color(username="pcmcd",games=10):
     return result_by_color_df
 
 def results_by_opening(username="pcmcd",games=10):
-    username = username.strip()
     data = get_lichess_user_game_history(username,games)
     data = enhance_game_data(data,username)
     df = create_df_from_data(data)
-    result_by_opening_df = df.groupby('opening').agg({'user_score': 'sum','game_id':'count'}).reset_index()
+    result_by_opening_df = df.groupby('parent_opening').agg({'user_score': 'sum','game_id':'count'}).reset_index()
     result_by_opening_df.columns = ['opening', 'score', 'games']
     result_by_opening_df = result_by_opening_df.sort_values(by=['games','score','opening'], ascending=[False,False,True])
 
     return result_by_opening_df
 
 def player_overall_score(username="pcmcd",games=10):
-    username = username.strip()
     data = get_lichess_user_game_history(username,games)
     data = enhance_game_data(data,username)
     df = create_df_from_data(data)
@@ -174,7 +174,6 @@ def player_overall_score(username="pcmcd",games=10):
     return (score_df,games)
 
 def plotly_chart(username='pcmcd', format_choice='Blitz'):
-    username = username.strip()
     #getting data from Lichess API
     df = get_lichess_rating_history(username,format_choice)
     #calculate min and max for annotations
