@@ -116,7 +116,8 @@ def enhance_game_data(games,user):
         #opening formatted with a semi colon to give more detail. Parent better for rollups
         parent_opening = opening.split(":")[0]
         
-        game_dict["game_id"] = game_id
+        #game_dict["game_id"] = game_id
+        game_dict["game_url"] = f"https://lichess.org/{game_id}"
         game_dict["rated"] = rated
         game_dict["match_type"] = match_type
         game_dict["match_speed"] = match_speed
